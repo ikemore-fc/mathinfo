@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День Математики и Информатики</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #0a0e1a;
+    color: #e0f7ff;
+    min-height: 100vh;
+    padding: 30px 20px;
+    background-image:
+      radial-gradient(circle at 15% 15%, rgba(0,180,255,0.13), transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(150,0,255,0.13), transparent 45%);
+  }
+  .container { max-width: 900px; margin: 0 auto; display: none; }
+  .container.active { display: block; }
+  
+  .center-wrap {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+  }
+  h1 {
+    font-size: 2rem; margin-bottom: 15px;
+    background: linear-gradient(90deg, #00d4ff, #a855f7);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { color: #8ab4c9; margin-bottom: 40px; max-width: 600px; line-height: 1.5; }
+  .cards { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
+  .card {
+    width: 260px; padding: 40px 25px;
+    background: rgba(20, 30, 50, 0.7);
+    border: 1px solid rgba(0, 200, 255, 0.3);
+    border-radius: 20px; text-align: center;
+    text-decoration: none; color: inherit;
+    transition: all 0.3s ease; cursor: pointer;
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.1);
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    border-color: #00d4ff;
+    box-shadow: 0 0 40px rgba(0, 200, 255, 0.4);
+  }
+  .card .icon { font-size: 3.5rem; margin-bottom: 15px; }
+  .card h2 { font-size: 1.5rem; margin-bottom: 8px; }
+  .card p { color: #8ab4c9; font-size: 0.9rem; }
+  
+  .topbar {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 25px;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .back {
+    color: #00d4ff; text-decoration: none; font-size: 0.95rem;
+    border: 1px solid #00d4ff55; padding: 8px 16px;
+    border-radius: 10px; transition: 0.2s; cursor: pointer;
+    background: none; outline: none;
+  }
+  .back:hover { background: #00d4ff22; }
+  .score { font-size: 1rem; color: #a855f7; font-weight: bold; }
+  .progress { color: #8ab4c9; margin-bottom: 20px; font-size: 0.95rem; }
+  
+  .task-box {
+    background: rgba(20, 30, 50, 0.8);
+    border: 1px solid rgba(0, 200, 255, 0.25);
+    border-radius: 16px; padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.1);
+  }
+  .task-question { font-size: 1.2rem; margin-bottom: 20px; line-height: 1.5; }
+  .hint { color: #8ab4c9; font-size: 0.85rem; font-style: italic; margin-bottom: 20px; }
+  form { display: flex; gap: 10px; flex-wrap: wrap; }
+  input[type="text"] {
+    flex: 1; min-width: 200px; padding: 12px 16px;
+    border-radius: 10px; border: 1px solid #00d4ff55;
+    background: #0f1728; color: #e0f7ff; font-size: 1rem;
+    outline: none; transition: 0.2s;
+  }
+  input[type="text"]:focus { border-color: #00d4ff; box-shadow: 0 0 15px #00d4ff44; }
+  button, .btn {
+    padding: 12px 24px; border-radius: 10px; border: none;
+    background: linear-gradient(90deg, #00a8ff, #a855f7);
+    color: white; font-size: 1rem; font-weight: bold;
+    cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block;
+  }
+  button:hover, .btn:hover { opacity: 0.85; transform: scale(1.03); }
+  
+  .feedback { margin-top: 18px; padding: 14px 18px; border-radius: 10px; font-size: 1rem; font-weight: 500; }
+  .feedback.ok { background: #00ff8822; border: 1px solid #00ff88; color: #00ff88; }
+  .feedback.bad { background: #ff005522; border: 1px solid #ff0055; color: #ff8080; }
+  .next-btn {
+    display: inline-block; margin-top: 15px; padding: 12px 24px;
+    background: linear-gradient(90deg, #00a8ff, #a855f7);
+    color: white; text-decoration: none; border-radius: 10px;
+    font-weight: bold; transition: 0.2s; cursor: pointer;
+  }
+  .next-btn:hover { opacity: 0.85; }
+  
+  .facts {
+    background: rgba(20, 30, 50, 0.6);
+    border: 1px solid rgba(150, 0, 255, 0.25);
+    border-radius: 16px; padding: 25px;
+  }
+  .facts h3 { font-size: 1.1rem; color: #a855f7; margin-bottom: 15px; }
+  .facts ul { list-style: none; }
+  .facts li {
+    padding: 10px 0; border-bottom: 1px solid #ffffff11;
+    font-size: 0.92rem; color: #b8d4e0; line-height: 1.45;
+  }
+  .facts li:last-child { border-bottom: none; }
+  .facts li::before { content: "💡 "; }
+  
+  .big-score {
+    font-size: 4rem; font-weight: bold; margin: 20px 0;
+    color: #00d4ff; text-shadow: 0 0 30px #00d4ff88;
+  }
+  .result-box {
+    background: rgba(20, 30, 50, 0.8);
+    border: 1px solid rgba(0, 200, 255, 0.3);
+    border-radius: 24px; padding: 50px 40px;
+    text-align: center; max-width: 550px;
+    box-shadow: 0 0 50px rgba(0, 150, 255, 0.2);
+    margin: 0 auto;
+  }
+  .msg { color: #8ab4c9; margin-bottom: 30px; font-size: 1rem; }
+  .btn.alt { background: transparent; border: 1px solid #00d4ff; color: #00d4ff; }
+  .footer-note { margin-top: 30px; font-size: 0.85rem; color: #556; text-align: center; }
+  
+  /* Стиль для подписи автора */
+  .author-sign {
+    margin-top: 30px;
+    color: #a855f7;
+    font-weight: bold;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+  }
+</style>
+</head>
+<body>
+
+<!-- ГЛАВНАЯ СТРАНИЦА -->
+<div id="page-index" class="container active">
+  <div class="center-wrap">
+    <h1>🚀 День Математики и Информатики</h1>
+    <p class="subtitle">Узнай 5 интересных фактов и реши 5 заданий по выбранному предмету. Накапливай баллы и проверяй свои знания!</p>
+    <div class="cards">
+      <div class="card" onclick="startSubject('math')">
+        <div class="icon">📐</div><h2>Математика</h2><p>5 фактов · 5 заданий</p>
+      </div>
+      <div class="card" onclick="startSubject('it')">
+        <div class="icon">💻</div><h2>Информатика</h2><p>5 фактов · 5 заданий</p>
+      </div>
+    </div>
+    
+    <!-- Подпись автора -->
+    <div class="author-sign">
+      Сделано студентом 1 курса ГБПОУ ВО ВЮТ<br>Бубновым Эдуардом Максимовичем
+    </div>
+    
+  </div>
+</div>
+
+<!-- СТРАНИЦА ПРЕДМЕТА -->
+<div id="page-subject" class="container">
+  <div class="topbar">
+    <button class="back" onclick="goHome()">← На главную</button>
+    <div class="score" id="score-display">⭐ Баллы: 0 / 5</div>
+  </div>
+  <h1 id="subject-title">Математика</h1>
+  <p class="progress" id="progress-text">Задание 1 из 5</p>
+  
+  <div class="task-box" id="task-box">
+    <!-- Сюда вставляется задание -->
+  </div>
+  
+  <div class="facts">
+    <h3 id="facts-title">💡 5 интересных фактов</h3>
+    <ul id="facts-list"></ul>
+  </div>
+</div>
+
+<!-- СТРАНИЦА РЕЗУЛЬТАТА -->
+<div id="page-result" class="container">
+  <div class="center-wrap">
+    <div class="result-box">
+      <h1 id="result-title">Завершено!</h1>
+      <div class="big-score" id="result-score">0 / 5</div>
+      <p class="msg" id="result-msg"></p>
+      <button class="btn" onclick="restartSubject()">Пройти заново</button>
+      <button class="btn alt" onclick="goHome()">К выбору предмета</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// === БАЗА ДАННЫХ ===
+const facts = {
+  math: [
+    "Число 0 — единственное число, которое нельзя записать римскими цифрами.",
+    "В математике есть число «гугол» — это 1 со 100 нулями.",
+    "Сумма углов любого треугольника всегда равна 180°.",
+    "Число π иррационально: его десятичная запись никогда не заканчивается и не повторяется.",
+    "0,999... (бесконечная девятка) математически РАВНО 1."
+  ],
+  it: [
+    "Первая компьютерная программа была написана Адой Лавлейс в 1843 году — задолго до появления компьютеров.",
+    "Слово «баг» появилось, когда в 1947 году в компьютер нашли настоящего мотылька.",
+    "В 1 килобайте на самом деле 1024 байта, а не 1000.",
+    "Первый жёсткий диск (1956 г.) весил около тонны и хранил всего 5 МБ.",
+    "Google обрабатывает миллиарды запросов в день — но каждый занимает доли секунды."
+  ]
+};
+
+const tasks = {
+  math: [
+    { question: "Сколько будет 15% от 200?", answer: "30", hint: "15% = 0.15" },
+    { question: "Решите уравнение: 3x + 7 = 22. Чему равен x?", answer: "5", hint: "Сначала перенесите 7 вправо" },
+    { question: "Площадь квадрата равна 49 см². Чему равна его сторона (в см)?", answer: "7", hint: "Площадь квадрата = сторона²" },
+    { question: "Чему равна сумма чисел от 1 до 10?", answer: "55", hint: "Формула: n(n+1)/2" },
+    { question: "Найдите значение: 2³ + 3² = ?", answer: "17", hint: "2³ = 8, 3² = 9" }
+  ],
+  it: [
+    { question: "Переведите число 1010 из двоичной системы в десятичную.", answer: "10", hint: "1·8 + 0·4 + 1·2 + 0·1" },
+    { question: "Сколько байт в 2 килобайтах?", answer: "2048", hint: "1 КБ = 1024 байта" },
+    { question: "Какое устройство является «мозгом» компьютера? (одно слово)", answer: "процессор", hint: "CPU" },
+    { question: "Переведите десятичное число 7 в двоичную систему.", answer: "111", hint: "4 + 2 + 1" },
+    { question: "Как называется вредоносная программа, которая размножается сама? (одно слово)", answer: "вирус", hint: "Начинается на «в»" }
+  ]
+};
+
+// === ПЕРЕМЕННЫЕ СОСТОЯНИЯ ===
+let currentSubject = null;
+let currentTaskIndex = 0;
+let currentScore = 0;
+
+// === ФУНКЦИИ ===
+function showPage(pageId) {
+  document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+function goHome() {
+  showPage('page-index');
+}
+
+function startSubject(subject) {
+  currentSubject = subject;
+  currentTaskIndex = 0;
+  currentScore = 0;
+  showPage('page-subject');
+  
+  document.getElementById('subject-title').textContent = subject === 'math' ? 'Математика' : 'Информатика';
+  document.getElementById('facts-title').textContent = '💡 5 интересных фактов — ' + (subject === 'math' ? 'Математика' : 'Информатика');
+  
+  // Заполняем факты
+  const factsList = document.getElementById('facts-list');
+  factsList.innerHTML = '';
+  facts[subject].forEach(fact => {
+    const li = document.createElement('li');
+    li.textContent = fact;
+    factsList.appendChild(li);
+  });
+  
+  renderTask();
+}
+
+function renderTask() {
+  const total = tasks[currentSubject].length;
+  document.getElementById('score-display').textContent = `⭐ Баллы: ${currentScore} / ${total}`;
+  document.getElementById('progress-text').textContent = `Задание ${currentTaskIndex + 1} из ${total}`;
+  
+  const taskBox = document.getElementById('task-box');
+  
+  if (currentTaskIndex >= total) {
+    showResult();
+    return;
+  }
+  
+  const task = tasks[currentSubject][currentTaskIndex];
+  
+  taskBox.innerHTML = `
+    <div class="task-question">${task.question}</div>
+    <div class="hint">💭 Подсказка: ${task.hint}</div>
+    <form onsubmit="checkAnswer(event)">
+      <input type="text" id="answer-input" placeholder="Введите ваш ответ..." autofocus required autocomplete="off">
+      <button type="submit">Проверить</button>
+    </form>
+  `;
+}
+
+function checkAnswer(event) {
+  event.preventDefault();
+  const input = document.getElementById('answer-input');
+  const userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, '');
+  const task = tasks[currentSubject][currentTaskIndex];
+  const correctAnswer = task.answer.toLowerCase().replace(/\s+/g, '');
+  
+  const taskBox = document.getElementById('task-box');
+  const total = tasks[currentSubject].length;
+  
+  if (userAnswer === correctAnswer) {
+    currentScore++;
+    document.getElementById('score-display').textContent = `⭐ Баллы: ${currentScore} / ${total}`;
+    
+    taskBox.innerHTML = `
+      <div class="task-question">${task.question}</div>
+      <div class="hint">💭 Подсказка: ${task.hint}</div>
+      <div class="feedback ok">✅ Правильно! +1 балл</div>
+      <button class="next-btn" onclick="nextTask()">${currentTaskIndex + 1 < total ? 'Следующее задание →' : 'Показать результат →'}</button>
+    `;
+  } else {
+    taskBox.innerHTML = `
+      <div class="task-question">${task.question}</div>
+      <div class="hint">💭 Подсказка: ${task.hint}</div>
+      <div class="feedback bad">❌ Неправильно. Правильный ответ: ${task.answer}</div>
+      <button class="next-btn" onclick="nextTask()">Пропустить →</button>
+    `;
+  }
+}
+
+function nextTask() {
+  currentTaskIndex++;
+  renderTask();
+}
+
+function showResult() {
+  showPage('page-result');
+  const total = tasks[currentSubject].length;
+  document.getElementById('result-title').textContent = (currentSubject === 'math' ? 'Математика' : 'Информатика') + ' — завершено!';
+  document.getElementById('result-score').textContent = `${currentScore} / ${total}`;
+  
+  let msg = "";
+  if (currentScore === total) msg = "🏆 Идеальный результат! Ты настоящий гений!";
+  else if (currentScore >= total * 0.6) msg = "👍 Хороший результат! Есть куда расти.";
+  else msg = "📚 Стоит повторить материал. Попробуй ещё раз!";
+  
+  document.getElementById('result-msg').textContent = msg;
+}
+
+function restartSubject() {
+  startSubject(currentSubject);
+}
+</script>
+
+</body>
+</html>
